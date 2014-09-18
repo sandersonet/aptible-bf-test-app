@@ -1,0 +1,12 @@
+%h1 Invoice #{@invoice.id}
+%table.table
+  %thead
+    %tr
+      %th Name
+      %th Description
+      %th Cost
+- @invoice.invoiceLines.each do |invoice_line|
+  %tr
+    %td= invoice_line.name
+    %td= invoice_line.description
+    %td= invoice_line.cost

@@ -1,0 +1,5 @@
+%h1 Invoices
+%ul
+  - @invoices.each do |invoice|
+    %li
+      %a{ href: invoice_path(invoice.id) } #{invoice.state} #{invoice.invoicePaid}

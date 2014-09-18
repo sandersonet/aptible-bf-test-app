@@ -1,0 +1,105 @@
+.page-header
+  %h1
+    Subscription
+    %small= @subscription.id
+    %span.label.label-info= @subscription.status
+
+.btn-group.form-group
+  = form_tag(subscription_usage_sessions_path(subscription_id: @subscription.id), method: 'POST') do
+    %select{ name: 'uom' }
+      - @units.each do |uom|
+        %option{value: uom.name}= uom.displayedAs
+    %button.btn.btn-success{ type: 'submit' } Start New Session
+
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title Usages
+  %table.table
+    %thead
+      %tr
+        %th Session
+        %th Type
+        %th Value
+        %th Unit of Measure
+        %th Duration
+        %th Started at
+        %th Stopped at
+
+    %tbody
+      - @subscription.usage.each do |usage|
+        %tr
+          %td= usage.sessionID
+          %td= usage.usageType
+          %td= usage.usageValue
+          %td= usage.uom
+          %td #{distance_of_time_in_words(usage.usageDuration/1000)}
+          %td= usage.start.advance(hours: -4).strftime('%m/%d/%Y %I:%M')
+          %td= usage.stop.advance(hours: -4).strftime('%m/%d/%Y %I:%M') if usage.stop
+
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title Usage Periods
+  %table.table
+    %thead
+      %tr
+        %th Period
+        %th Type
+        %th Value
+        %th State
+        %th Unit of Measure
+        %th Duration
+        %th Resolution
+        %th Started at
+        %th Invoice
+
+    %tbody
+      - @subscription.usage_periods.each do |period|
+        %tr
+          %td= period.period
+          %td= period.usageType
+          %td= period.usageValue
+          %td= period.state
+          %td= period.uom
+          %td #{distance_of_time_in_words(period.usageDuration/1000)}
+          %td by the #{period.durationResolution}
+          %td= period.start.advance(hours: -4).strftime('%m/%d/%Y %I:%M')
+          %td
+            - if period.invoiceID
+              %a{ href: invoice_path(id: period.invoiceID) }= period.invoiceID
+
+
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title Usage Sessions
+  %table.table
+    %thead
+      %tr
+        %th Session ID
+        %th State
+        %th Unit of Measure
+        %th Duration
+        %th Started at
+        %th Stopped at
+        %th
+    %tbody
+      - @subscription.usage_sessions.each do |session|
+        %tr
+          %td= session.sessionID
+          %td= session.state
+          %td= session.uom
+          %td= distance_of_time_in_words(session.uduration/1000)
+          %td= session.start.advance(hours: -4).strftime('%m/%d/%Y %I:%M')
+          %td= session.stop.advance(hours: -4).strftime('%m/%d/%Y %I:%M') unless session.stop.nil?
+          %td
+            - if session.stop.nil?
+              = form_tag(usage_session_usages_path(usage_session_id: session.sessionID, subscription_id: @subscription.id), method: 'POST') do
+                %button.btn-xs.btn.btn-success{ type: 'submit' }
+                  %i.glyphicon.glyphicon-plus
+                  Add Usage
+              = form_tag(usage_session_path(id: session.sessionID), method: 'PATCH') do
+                %input{ type: 'hidden', name: 'subscription_id', value: @subscription.id }
+                %input{ type: 'hidden', name: 'uom', value: session.uom }
+                %input{ type: 'hidden', name: 'stop', value: 'stop'}
+                %button.btn-xs.btn.btn-danger{ type: 'submit' }
+                  %i.glyphicon.glyphicon-time
+                  Stop

@@ -1,0 +1,27 @@
+.page-header
+  %h1
+    Subscriptions
+
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title Subscriptions
+  %table.table
+    %thead
+      %tr
+        %th ID
+        %th Name
+        %th Product
+        %th Type
+        %th State
+        %th Started
+        %th
+    %tbody
+      - @subscriptions.each do |subscription|
+        %tr
+          %td
+            %a{ href: subscription_path(id: subscription.id) }= subscription.id
+          %td= subscription.name
+          %td= subscription.productID
+          %td= subscription.type
+          %td= subscription.state
+          %td= subscription.created.strftime('%m/%d/%Y')
