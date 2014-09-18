@@ -1,28 +1,21 @@
-== README
+# Aptible::BillForward Test App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a sample Rails app used to test the [aptible-bf-ruby](https://github.com/aptible/aptible-bf-ruby).
 
-Things you may want to cover:
+### Setup
 
-* Ruby version
+#### Create a `.env` file
 
-* System dependencies
+Create a `.env` file to store necessary environment variables.  You must include `BILLFORWARD_ACCESS_TOKEN`.
 
-* Configuration
+```
+PORT=3000
+BILLFORWARD_ACCESS_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
 
-* Database creation
+#### Install Dependencies
+Run `bundle install` to install dependencies.
 
-* Database initialization
+#### Start Server
+Run `foreman start` to start server.
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
